@@ -21,7 +21,7 @@ export class PermissionsGuards implements CanActivate {
 
     const userHasPermission = await permit.check(
       typePolicy.user,
-      typePolicy.tipoAcesso,
+      typePolicy.tipoAcao,
       typePolicy.rule,
     );
 

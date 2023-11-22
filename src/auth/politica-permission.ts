@@ -1,5 +1,5 @@
 export const typePolicy = {
   user: 'fabricio_user@gmail.com',
-  tipoAcesso: 'read',
+  tipoAcao: 'read',
   rule: 'protected_page',
 };

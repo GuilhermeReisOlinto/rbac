@@ -1,16 +1,17 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Permit } from 'permitio';
+import { typePolicy } from './politica-permission';
+import { config } from 'dotenv';
+config();
 
 const permit = new Permit({
-  pdp: 'https://cloudpdp.api.permit.io',
-  token:
-    'permit_key_nkGOVUo6zz2jikPn4peSe8r9BpanyjsjpmIG8SC6AFne57SaMKRRlA8Coei43RzdXNHPRjYacUxvhdan1vlsN7',
+  pdp: process.env.URL_PERMIT_IO,
+  token: process.env.TOKEN_PERMIT_IO,
 });
 
 @Injectable()
@@ -18,15 +19,14 @@ export class PermissionsGuards implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    // logica aqui
     const userHasPermission = await permit.check(
-      'demo_user@gmail.com',
-      'read',
-      'protected_page',
+      typePolicy.user,
+      typePolicy.tipoAcesso,
+      typePolicy.rule,
     );
 
     if (!userHasPermission) {
-      throw new UnauthorizedException('Você não tem permissão');
+      throw new ForbiddenException('Você não tem permissão');
     }
 
     return true;
